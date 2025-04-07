@@ -108,6 +108,7 @@ def test_sigmoid(a: float) -> None:
     * It is  strictly increasing.
     """
     # TODO: Implement for Task 0.2.
+    assert sigmoid()
     raise NotImplementedError("Need to implement for Task 0.2")
 
 
