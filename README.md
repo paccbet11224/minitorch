@@ -5,4 +5,5 @@
 * Docs: https://minitorch.github.io/
 
 
-记录学习pytorch
+## 记录学习pytorch
+2025年4月12日 完成task0
