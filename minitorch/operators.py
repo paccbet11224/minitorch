@@ -100,3 +100,44 @@ def sigmoid_back(x, d):
 
 
 # TODO: Implement for Task 0.3.
+def map(fn):
+    """
+    Returns:
+        function : A function that takes a list, applies `fn` to each element, and returns a
+        new list
+    """
+    def process(a: list) -> list:
+        res = []
+        for item in a:
+            res.append(fn(item))
+        return res
+    return process
+
+def zipwith(fn):
+    def process(a: list, b:list) -> list:
+        res = []
+        for i in range(len(a)):
+            res.append(fn(a[i],b[i]))
+        return res
+    return process
+
+def reduce(fn, init:float):
+    def process(a: list) -> float:
+        ans = init
+        for item in a:
+            ans = fn(ans, item)
+        return ans
+    return process
+
+def negList(a: list) -> list:
+    return map(neg)(a)
+
+def addLists(a: list, b:list) -> list:
+    assert len(a) == len(b)
+    return zipwith(add)(a,b)
+
+def sum(a: list) -> list:
+    return reduce(add, 0)(a)
+
+def prod(a: list) -> list:
+    return reduce(mul, 1)(a)

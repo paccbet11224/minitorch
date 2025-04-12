@@ -3,6 +3,7 @@ from typing import Callable, List, Tuple
 import pytest
 from hypothesis import given
 from hypothesis.strategies import lists
+import math
 
 from minitorch import MathTest
 import minitorch
@@ -108,11 +109,7 @@ def test_sigmoid(a: float) -> None:
     * It is  strictly increasing.
     """
     # TODO: Implement for Task 0.2.
-    assert sigmoid(0) == 0.5
-    assert_close(sigmoid(a), sigmoid(1-a))
-    assert 0 <= sigmoid(a) <= 1
-    assert sigmoid(a) < sigmoid(a+0.1)
-    raise NotImplementedError("Need to implement for Task 0.2")
+    assert_close(sigmoid(a), 1.0 / (1 + math.exp(-a)))
 
 
 @pytest.mark.task0_2
@@ -120,8 +117,18 @@ def test_sigmoid(a: float) -> None:
 def test_transitive(a: float, b: float, c: float) -> None:
     """Test the transitive property of less-than (a < b and b < c implies a < c)"""
     # TODO: Implement for Task 0.2.
-    assert a < c if a < b and b < c
-    raise NotImplementedError("Need to implement for Task 0.2")
+    if lt(a, b) and lt(b, c):
+        assert lt(a, c)==1
+    if lt(a, c) and lt(c, b):
+        assert lt(a, b)==1
+    if lt(b, c) and lt(c, a):
+        assert lt(b, a)==1
+    if lt(b, a) and lt(a, c):
+        assert lt(b, c)==1
+    if lt(c, b) and lt(b, a):
+        assert lt(c, a)==1
+    if lt(c, a) and lt(a, b):
+        assert lt(c, b)==1
 
 
 @pytest.mark.task0_2
@@ -131,7 +138,6 @@ def test_symmetric() -> None:
     """
     # TODO: Implement for Task 0.2.
     assert mul(1,2) == mul(2,1)
-    raise NotImplementedError("Need to implement for Task 0.2")
 
 
 @pytest.mark.task0_2
@@ -141,15 +147,14 @@ def test_distribute() -> None:
     """
     # TODO: Implement for Task 0.2.
     assert mul(2,(mul(3,4))) == mul(mul(2,3), 4)
-    raise NotImplementedError("Need to implement for Task 0.2")
 
 
 @pytest.mark.task0_2
+@given(small_floats, small_floats, small_floats)
 def test_other(a: float, b: float, c: float) -> None:
     """Write a test that ensures some other property holds for your functions."""
     # TODO: Implement for Task 0.2.
-    assert mul(a,mul(b, c)) == mul(mul(a, b),c)
-    raise NotImplementedError("Need to implement for Task 0.2")
+    assert_close(mul(a,mul(b, c)), mul(mul(a, b),c))
 
 
 # ## Task 0.3  - Higher-order functions
@@ -160,11 +165,12 @@ def test_other(a: float, b: float, c: float) -> None:
 
 @pytest.mark.task0_3
 @given(small_floats, small_floats, small_floats, small_floats)
-def test_zip_with(a: float, b: float, c: float, d: float) -> None:
-    x1, x2 = addLists([a, b], [c, d])
-    y1, y2 = a + c, b + d
-    assert_close(x1, y1)
-    assert_close(x2, y2)
+def test_zip_with(a, b, c, d) -> None:
+    ls1 = [a,b]
+    ls2 = [c,d]
+    x1 = addLists(ls1, ls2)
+    assert_close(x1[0], a + c)
+    assert_close(x1[1], b + d)
 
 
 @pytest.mark.task0_3
@@ -177,7 +183,7 @@ def test_sum_distribute(ls1: List[float], ls2: List[float]) -> None:
     is the same as the sum of each element of `ls1` plus each element of `ls2`.
     """
     # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    assert_close(add(sum(ls1), sum(ls2)), sum(addLists(ls1,ls2)))
 
 
 @pytest.mark.task0_3
